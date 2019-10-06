@@ -4,13 +4,13 @@ require 'json'
 secrets = JSON.parse(File.read('secrets.json'))
 token = secrets['token']
 
-Telegram::Bot::Client.run(token, logger: Logger.new($stderr)) do |bot|
-  bot.logger.info('ready')
+Telegram::Bot::Client.run(token) do |bot|
+  # botUser = bot.getMe()
+  # print "logged in as {botUser.first_name} {botUser.last_name} (@{botUser.username}) [{botUser.id}]"
 
   bot.listen do |message|
-    case message.text
-    when '/fodasse'
-      bot.api.send_message(chat_id: message.chat.id, text: "calado #{message.from.first_name}")
+    if message.chat.id == -1001451190298
+      # reee
     end
   end
 end
