@@ -2,3 +2,4 @@ secrets.json
 .bundle
 Gemfile.lock
 /vendor/
+/data/
