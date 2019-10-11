@@ -5,18 +5,22 @@ secrets = JSON.parse(File.read('secrets.json'))
 token = secrets['token']
 channel = secrets['channel_id']
 
+puts "> logging in..."
+
 Telegram::Bot::Client.run(token) do |bot|
   botUser = bot.api.get_me()
   if botUser["ok"]
     result = botUser["result"]
-    puts "success"
-    puts "logged in as #{result['first_name']} (@#{result['username']}) [#{result['id']}]\n"
+    un = "@#{result['username']}"
+    puts "> success"
+    puts "> logged in as #{result['first_name']} (#{un}) [#{result['id']}]\n\n"
   else
-    puts "failed"
+    puts "> failed"
     exit
   end
 
   bot.listen do |message|
+    p message.chat.id
     sender = message.from
 
     if message.chat.id == channel && !sender.is_bot && message.text != nil
@@ -31,6 +35,10 @@ Telegram::Bot::Client.run(token) do |bot|
         words = message.text.split
 
         cmd = words[0][1..-1]
+        if cmd.end_with?(un)
+          cmd.slice!(un)  
+        end
+
         args = words[1..-1]
 
         case cmd
