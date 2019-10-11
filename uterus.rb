@@ -20,6 +20,13 @@ Telegram::Bot::Client.run(token) do |bot|
     sender = message.from
 
     if message.chat.id == channel && !sender.is_bot && message.text != nil
+      data = {}
+      data_path = "data/#{sender.id}.json"
+
+      if File.file?(data_path)
+        data = JSON.parse(File.read(data_path))
+      end
+
       if message.text.start_with?("/")
         words = message.text.split
 
@@ -28,16 +35,28 @@ Telegram::Bot::Client.run(token) do |bot|
 
         case cmd
         when "mimic"
-          
+          word = "/s"
+          sentence = []
+
+          while word != "/e"
+            count,hash = data[word]
+            index = rand(1..count)
+            u = 0
+
+            hash.each { |w,c|
+              if index > u && index <= u+c
+                sentence.append(w)
+                word = w
+                break
+              else
+                u += c
+              end
+            }
+          end
+
+          bot.api.send_message(chat_id: message.chat.id, text:sentence[0..-2].join(" "))
         end
       else
-        data = {}
-        data_path = "data/#{sender.id}.json"
-
-        if File.file?(data_path)
-          data = JSON.parse(File.read(data_path))
-        end
-
         words = ["/s"] + message.text.split + ["/e"]
         words[0..-2].zip(words[1..-1]) { |word,next_word|
           count, hash = 0, {}
