@@ -8,7 +8,7 @@ Put your token and the id of the channel you want the bot to work in on `secrets
 
 ```json
 {
-  "token": "your_token_here"
+  "token": "your_token_here",
   "channel": 1234567890
 }
 ```
