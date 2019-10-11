@@ -20,7 +20,6 @@ Telegram::Bot::Client.run(token) do |bot|
   end
 
   bot.listen do |message|
-    p message.chat.id
     sender = message.from
 
     if message.chat.id == channel && !sender.is_bot && message.text != nil
