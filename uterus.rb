@@ -1,9 +1,17 @@
 require 'telegram/bot'
 require 'json'
 
-secrets = JSON.parse(File.read('secrets.json'))
-token = secrets['token']
-channel = secrets['channel_id']
+if File.file?('secrets.json')
+  secrets = JSON.parse(File.read('secrets.json'))
+elsif ENV["token"] != nil && ENV["channel"] != nil
+  secrets = ENV
+else
+  puts "> no secrets were provided"
+  exit
+end
+
+token = secrets["token"]
+channel = secrets["channel"]
 
 puts "> logging in..."
 
