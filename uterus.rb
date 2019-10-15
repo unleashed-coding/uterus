@@ -11,7 +11,9 @@ else
 end
 
 token = secrets["token"]
-channel = secrets["channel"]
+channel = secrets["channel"].to_i
+
+Dir.mkdir("data/") unless File.exists?("data/")
 
 puts "> logging in..."
 
@@ -50,26 +52,30 @@ Telegram::Bot::Client.run(token) do |bot|
 
         case cmd
         when "mimic"
-          word = "/s"
-          sentence = []
+          if data == {}
+            bot.api.send_message(chat_id: message.chat.id, text:"sorry, i don't have any data about you yet")
+          else
+            word = "/s"
+            sentence = []
 
-          while word != "/e"
-            count,hash = data[word]
-            index = rand(1..count)
-            u = 0
+            while word != "/e"
+              count,hash = data[word]
+              index = rand(1..count)
+              u = 0
 
-            hash.each { |w,c|
-              if index > u && index <= u+c
-                sentence.append(w)
-                word = w
-                break
-              else
-                u += c
-              end
-            }
+              hash.each { |w,c|
+                if index > u && index <= u+c
+                  sentence.append(w)
+                  word = w
+                  break
+                else
+                  u += c
+                end
+              }
+            end
+
+            bot.api.send_message(chat_id: message.chat.id, text:sentence[0..-2].join(" "))
           end
-
-          bot.api.send_message(chat_id: message.chat.id, text:sentence[0..-2].join(" "))
         end
       else
         words = ["/s"] + message.text.split + ["/e"]
