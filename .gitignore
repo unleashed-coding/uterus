@@ -3,3 +3,4 @@ secrets.json
 Gemfile.lock
 /vendor/
 /data/
+/pic/

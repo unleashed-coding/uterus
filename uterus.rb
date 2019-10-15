@@ -10,6 +10,8 @@ else
   exit
 end
 
+Dir.mkdir('data/') unless File.exists?('data/')
+
 token = secrets["token"]
 channel = secrets["channel"]
 
